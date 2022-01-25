@@ -18,6 +18,7 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ## Required Software
 
+- PadoGrid 0.9.13+ (No products required)
 - Docker
 - Docker Compose
 - Maven 3.x
@@ -27,18 +28,6 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 - jq
 
 ## Building Demo
-
-:pencil2: This bundle builds the demo enviroment based on the Geode version in your workspace. Make sure your workspace has been configured with the desired version before building the demo environment.
-
-Before you begin, make sure you are in a Geode product context by switching into a Geode cluster. You can create a Geode cluster if it does not exist as shown below.
-
-``bash
-# Create the default cluster named, 'mygeode'
-make_cluster -product geode
-
-# Switch to the 'mygeode' cluster to set the product context
-switch_cluster mygeode
-```
 
 We must first build the bundle by running the `build_app` command as shown below. This command copies the Geode, `padogrid-common`, and `geode-addon-core` jar files to the Docker container mounted volume in the `padogrid` directory so that the Geode Debezium Kafka connector can include them in its class path. It also downloads the ksql JDBC driver jar and its dependencies in the `padogrid/lib/jdbc` directory.
 
@@ -54,6 +43,7 @@ cd_docker debezium_cp
 tree padogrid
 ```
 
+Output:
 
 ```console
 padogrid/
@@ -61,13 +51,13 @@ padogrid/
 │   └── client-cache.xml
 ├── lib
 │   ├── ...
-│   ├── geode-addon-core-0.9.13-SNAPSHOT.jar
+│   ├── geode-addon-core-0.9.13.jar
 │   ├── ...
-│   ├── padogrid-common-0.9.13-SNAPSHOT.jar
+│   ├── padogrid-common-0.9.13.jar
 │   ├── ...
 ├── log
 └── plugins
-    └── geode-addon-core-0.9.13-SNAPSHOT-tests.jar
+    └── geode-addon-core-0.9.13-tests.jar
 ```
 
 
@@ -121,6 +111,13 @@ cd_app perf_test_ksql; cd bin_sh
 ./build_app
 ```
 
+The log4j jar file downloaded by `build_app` may have a conflict with the log4j jar included in the PadoGrid distribution. Make sure to remove the downloaded log4j files from the workspace's `lib` directory as follows.
+
+```bash
+cd_workspace
+rm lib/log4j*
+```
+
 Set the MySQL user name and password for `perf_test_ksql`:
 
 ```bash
@@ -141,7 +138,7 @@ Set user name and password as follows:
 
 ```bash
 cd_docker geode
-docker-compose up
+docker-compose up -d
 ```
 
 ### 2. Start Debezium
