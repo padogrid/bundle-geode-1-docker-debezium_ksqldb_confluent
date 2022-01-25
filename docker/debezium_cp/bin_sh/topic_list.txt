@@ -1,0 +1,10 @@
+ 9 topics:
+  topic "dbserver1" with 1 partitions:
+  topic "my_connect_configs" with 1 partitions:
+  topic "my_connect_statuses" with 5 partitions:
+  topic "dbhistory.nw" with 1 partitions:
+  topic "_confluent-ksql-default__command_topic" with 1 partitions:
+  topic "my_connect_offsets" with 25 partitions:
+  topic "__consumer_offsets" with 50 partitions:
+  topic "dbserver1.nw.orders" with 1 partitions:
+  topic "dbserver1.nw.customers" with 1 partitions:
