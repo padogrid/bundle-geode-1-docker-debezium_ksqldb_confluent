@@ -180,13 +180,15 @@ cd_app perf_test_ksql; cd bin_sh
 ./test_group -run -db -prop ../etc/group-factory.properties
 ```
 
-### 3. Navigate Confluent Control Center
+### 4. Navigate Confluent Control Center
 
 Open your browser and enter the following URL:
 
 http://localhost:9021
 
 To execute ksqlDB statements, navigate to **/Home/ksqlDB clusters/skqlDB/ksqldb1** and in the **Editor** pane, enter ksqlDB statements. The next section provides ksqlDB statements pertaining to the data ingested in the previous section.
+
+![Confluent Control Center Diagram](images/confluent-control-center.png)
 
 ### 5. Run ksqlDB CLI
 
