@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>padogrid.addon</groupId>
-	<artifactId>bundle-geode-1-docker-debezium_ksql_confluent</artifactId>
+	<artifactId>bundle-geode-1-docker-debezium_ksqldb_confluent</artifactId>
 	<packaging>pom</packaging>
         <name>${project.artifactId}</name>
 	<version>1.0.0</version>
