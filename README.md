@@ -1,4 +1,4 @@
-# Debezium-KSQL-Kafka Geode Connector
+# Debezium-ksqlDB-Confluent Geode Connector
 
 This bundle integrates Geode with Debezium and Confluent ksqlDB for ingesting initial data and CDC records from MySQL into Kafka and Geode via a Kafka sink connector included in the `padogrid` distribution.
 
