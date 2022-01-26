@@ -5,7 +5,7 @@ This bundle integrates Geode with Debezium and Confluent ksqlDB for ingesting in
 ## Installing Bundle
 
 ```bash
-install_bundle -download bundle-geode-1-docker-debezium_ksql_confluent
+install_bundle -download bundle-geode-1-docker-debezium_ksqldb_confluent
 ```
 
 :exclamation: If you are running this bundle on WSL, make sure your workspace is on a shared folder. The Docker volume it creates will not be visible otherwise.
