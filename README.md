@@ -172,7 +172,7 @@ docker-compose up -d
 
 Execute `init_all` which performs the following:
 
-- Place the included `cache.xml` file to the Geode docker cluster. This file configures Geode with co-located data. You can use the included Power BI files to generate reports by executing OQL. See details in the [Run Power BI](#10-run-power-bi) section.
+- Place the included `cache.xml` file to the Geode docker cluster. This file configures Geode with co-located data. You can use the included Power BI files to generate reports by executing OQL. See details in the [Run Power BI](#11-run-power-bi) section.
 - Create the `nw` database and grant all privileges to the user `debezium`:
 
 ```bash
@@ -544,7 +544,7 @@ etc/powerbi
 
 The included `*.pbix` files are identical to the ones found in the [Power BI bundle](https://github.com/padogrid/bundle-geode-1-app-perf_test_powerbi-cluster-powerbi). For Power BI instructions, follow the link below.
 
-https://github.com/padogrid/bundle-geode-1-app-perf_test_powerbi-cluster-powerbi#loading-pbix-files
+[Loading .pbix Files](https://github.com/padogrid/bundle-geode-1-app-perf_test_powerbi-cluster-powerbi#loading-pbix-files)
 
 ### 12. Run NiFi
 
