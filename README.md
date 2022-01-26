@@ -18,7 +18,7 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ## Required Software
 
-- PadoGrid 0.9.13+ (No products required)
+- PadoGrid 0.9.13+ (PRODUCT=none)
 - Docker
 - Docker Compose
 - Maven 3.x
@@ -107,6 +107,24 @@ Create and build `perf_test_ksql` for ingesting mock data into MySQL:
 
 ```bash
 create_app -product geode -app perf_test -name perf_test_ksql
+```
+
+This bundle does not require Geode/GemFire locally installed, i.e., `PRODUCT=none`. To run without the local Geode/GemFire installation, specify the Geode version number in the `setenv.sh` file as follows.
+```bash
+
+cd_app perf_test_ksql; cd bin_sh
+vi setenv.sh
+```
+
+Enter the version number in `setenv.sh`.
+
+```bash
+GEODE_VERSION=1.14.2
+```
+
+Build the app by running `build_app` which downloads the MySQL JDBC driver and Geode.
+
+```bash
 cd_app perf_test_ksql; cd bin_sh
 ./build_app
 ```
