@@ -39,3 +39,4 @@ setenv.sh0
 build
 *.xml0
 docker/geode
+docker/debezium_cp/padogrid/nifi

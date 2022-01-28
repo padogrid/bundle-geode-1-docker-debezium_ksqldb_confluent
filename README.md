@@ -5,7 +5,7 @@ This bundle integrates Geode with Debezium and Confluent ksqlDB for ingesting in
 ## Installing Bundle
 
 ```bash
-install_bundle -download bundle-geode-1-docker-debezium_ksqldb_confluent
+install_bundle -checkout bundle-geode-1-docker-debezium_ksqldb_confluent
 ```
 
 :exclamation: If you are running this bundle on WSL, make sure your workspace is on a shared folder. The Docker volume it creates will not be visible otherwise.
@@ -32,7 +32,7 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 We must first build the bundle by running the `build_app` command as shown below. This command copies the Geode, `padogrid-common`, and `geode-addon-core` jar files to the Docker container mounted volume in the `padogrid` directory so that the Geode Debezium Kafka connector can include them in its class path. It also downloads the ksql JDBC driver jar and its dependencies in the `padogrid/lib/jdbc` directory.
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./build_app
 ```
 
@@ -112,7 +112,7 @@ create_app -product geode -app perf_test -name perf_test_ksql
 This bundle does not require Geode/GemFire locally installed, i.e., `PRODUCT=none`. To run without the local Geode/GemFire installation, specify the Geode version number in the `setenv.sh` file as follows.
 ```bash
 
-cd_app perf_test_ksql; cd bin_sh
+cd_app perf_test_ksql/bin_sh
 vi setenv.sh
 ```
 
@@ -125,7 +125,7 @@ GEODE_VERSION=1.14.2
 Build the app by running `build_app` which downloads the MySQL JDBC driver and Geode.
 
 ```bash
-cd_app perf_test_ksql; cd bin_sh
+cd_app perf_test_ksql/bin_sh
 ./build_app
 ```
 
@@ -172,18 +172,18 @@ docker-compose up -d
 
 Execute `init_all` which performs the following:
 
-- Place the included `cache.xml` file to the Geode docker cluster. This file configures Geode with co-located data. You can use the included Power BI files to generate reports by executing OQL. See details in the [Run Power BI](#11-run-power-bi) section.
+- Place the included `cache.xml` file to the Geode docker cluster. This file configures Geode with co-located data. You can use the included Power BI files to generate reports by executing OQL. See details in the [Run Power BI](#12-run-power-bi) section.
 - Create the `nw` database and grant all privileges to the user `debezium`:
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./init_all
 ```
 
 There are three (3) Kafka connectors that we need to register. The MySQL connector is provided by Debezium and the data connectors are part of the PadoGrid distribution. 
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./register_connector_mysql
 ./register_connector_data_customers
 ./register_connector_data_orders
@@ -194,7 +194,7 @@ cd_docker debezium_cp; cd bin_sh
 Note that if you run the script more than once then you may see multiple customers sharing the same customer ID when you execute KSQL queries on streams since the streams keep all the CDC records. The database (MySQL), on the other hand, will always have a single customer per customer ID.
 
 ```bash
-cd_app perf_test_ksql; cd bin_sh
+cd_app perf_test_ksql/bin_sh
 ./test_group -run -db -prop ../etc/group-factory.properties
 ```
 
@@ -211,7 +211,7 @@ To execute ksqlDB statements, navigate to **/Home/ksqlDB clusters/skqlDB/ksqldb1
 ### 5. Run ksqlDB CLI
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./run_ksqldb_cli
 ```
 
@@ -397,7 +397,7 @@ Ctrl-D
 ### 6. Watch topics
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./watch_topic dbserver1.nw.customers
 ./watch_topic dbserver1.nw.orders
 ```
@@ -405,7 +405,7 @@ cd_docker debezium_cp; cd bin_sh
 ### 7. Run MySQL CLI
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./run_mysql_cli
 ```
 
@@ -469,7 +469,7 @@ The last command should display the connectors that we registered previously.
 The following scripts are provided to drop KSQL/ksqlDB queries using the KSQL/ksqlDB REST API.
 
 ```
-cd_app debezium_cp; cd bin_sh
+cd_app debezium_cp/bin_sh
 
 # Drop all queries
 ./ksql_drop_all_queries
@@ -488,7 +488,7 @@ The `run_gfsh` script logs into the locator container and starts `gfsh`. You can
 Login to `gfsh`:
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./run_gfsh
 ```
 
@@ -525,7 +525,13 @@ Quit `gfsh`:
 quit
 ```
 
-### 11. Run Power BI
+### 11. Browse Geode Pulse
+
+http://localhost:7070/pulse/
+
+![Geode Pulse](images/geode-pulse.png)
+
+### 12. Run Power BI
 
 This bundle includes the following Power BI files for generating reports by executing OQL queries using the Geode/GemFire REST API.
 
@@ -546,12 +552,20 @@ The included `*.pbix` files are identical to the ones found in the [Power BI bun
 
 [Loading .pbix Files](https://github.com/padogrid/bundle-geode-1-app-perf_test_powerbi-cluster-powerbi#loading-pbix-files)
 
-### 12. Run NiFi
+#### Freight Costs by Date
+
+![Power BI Pie Chart](images/pbi-pie.png)
+
+#### Customers by State
+
+![Power BI Map](images/pbi-map.png)
+
+### 13. Run NiFi
 
 This bundle also includes NiFi, which can be started as follows.
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./start_nifi
 ```
 
@@ -576,20 +590,22 @@ Template upload steps:
 The *Kafka Live Archive* group generates JSON files in the `padogrid/nifi/data/json` directory upon receipt of Debezium events from the Kafka topics, `customers` and `orders`. Each file represents a Debezium event containing a database CDC record. Run the `perf_test` app again to generate Kafka events.
 
 ```bash
-cd_docker debezium_cp; cd bin_sh
-tree padogrid/nifi/data/json/
+cd_docker debezium_cp/bin_sh
+tree padogrid/nifi/data/avro/
 ```
 
 Output:
 
 ```
-padogrid/nifi/data/json/
+padogrid/nifi/data/avro/
 ├── ...
 ├── ffca5dc0-b62a-4b61-a0c2-d8366e21851f
 ├── ffca8531-c2e3-4c66-b3ef-72ffddefd6eb
 ├── fff1d58c-94f6-4560-91d5-19670bc2985c
 └── ffff96b1-e575-4d80-8a0a-53032de8bd44
 ```
+
+![Nifi Screenshot](images/nifi.png)
 
 ## Teardown
 
@@ -599,7 +615,7 @@ cd_docker debezium_cp
 docker-compose down
 
 # Stop NiFi
-cd_docker debezium_cp; cd bin_sh
+cd_docker debezium_cp/bin_sh
 ./stop_nifi
 
 # Stop Geode containers

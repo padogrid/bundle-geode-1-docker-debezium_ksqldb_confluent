@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template encoding-version="1.3">
     <description></description>
-    <groupId>97875fa8-0177-1000-ca96-9cbb18a36480</groupId>
+    <groupId>9e05482e-017e-1000-6061-fb8182460b08</groupId>
     <name>Kafka Live Archive</name>
     <snippet>
         <processGroups>
-            <id>e24c8e09-ecd7-37d3-0000-000000000000</id>
-            <parentGroupId>d9ce18c8-c31b-31c8-0000-000000000000</parentGroupId>
+            <id>685967ad-c367-3cb8-0000-000000000000</id>
+            <parentGroupId>f0365c70-1e2a-3456-0000-000000000000</parentGroupId>
             <position>
                 <x>0.0</x>
                 <y>0.0</y>
@@ -14,13 +14,13 @@
             <comments></comments>
             <contents>
                 <connections>
-                    <id>38419e1f-f39f-3194-0000-000000000000</id>
-                    <parentGroupId>e24c8e09-ecd7-37d3-0000-000000000000</parentGroupId>
+                    <id>067603df-f13b-3238-0000-000000000000</id>
+                    <parentGroupId>685967ad-c367-3cb8-0000-000000000000</parentGroupId>
                     <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
                     <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>e24c8e09-ecd7-37d3-0000-000000000000</groupId>
-                        <id>e0fd29b9-6e5b-3019-0000-000000000000</id>
+                        <groupId>685967ad-c367-3cb8-0000-000000000000</groupId>
+                        <id>cc196a0f-fb4a-3b97-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
@@ -32,20 +32,20 @@
                     <name></name>
                     <selectedRelationships>success</selectedRelationships>
                     <source>
-                        <groupId>e24c8e09-ecd7-37d3-0000-000000000000</groupId>
-                        <id>2750d973-b4d9-3db9-0000-000000000000</id>
+                        <groupId>685967ad-c367-3cb8-0000-000000000000</groupId>
+                        <id>2d39b874-5d0c-3e44-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
                 <connections>
-                    <id>40050c4d-8b5b-3439-0000-000000000000</id>
-                    <parentGroupId>e24c8e09-ecd7-37d3-0000-000000000000</parentGroupId>
+                    <id>5256f1fc-0b25-39ed-0000-000000000000</id>
+                    <parentGroupId>685967ad-c367-3cb8-0000-000000000000</parentGroupId>
                     <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
                     <backPressureObjectThreshold>10000</backPressureObjectThreshold>
                     <destination>
-                        <groupId>e24c8e09-ecd7-37d3-0000-000000000000</groupId>
-                        <id>976142ae-dafb-3973-0000-000000000000</id>
+                        <groupId>685967ad-c367-3cb8-0000-000000000000</groupId>
+                        <id>e1f4ff51-43f7-3366-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </destination>
                     <flowFileExpiration>0 sec</flowFileExpiration>
@@ -57,15 +57,15 @@
                     <name></name>
                     <selectedRelationships>success</selectedRelationships>
                     <source>
-                        <groupId>e24c8e09-ecd7-37d3-0000-000000000000</groupId>
-                        <id>2750d973-b4d9-3db9-0000-000000000000</id>
+                        <groupId>685967ad-c367-3cb8-0000-000000000000</groupId>
+                        <id>2d39b874-5d0c-3e44-0000-000000000000</id>
                         <type>PROCESSOR</type>
                     </source>
                     <zIndex>0</zIndex>
                 </connections>
                 <controllerServices>
-                    <id>3f3e62e4-2f4f-3b41-0000-000000000000</id>
-                    <parentGroupId>e24c8e09-ecd7-37d3-0000-000000000000</parentGroupId>
+                    <id>35992f90-0abf-3e4f-0000-000000000000</id>
+                    <parentGroupId>685967ad-c367-3cb8-0000-000000000000</parentGroupId>
                     <bundle>
                         <artifact>nifi-record-serialization-services-nar</artifact>
                         <group>org.apache.nifi</group>
@@ -110,32 +110,13 @@
                             </value>
                         </entry>
                         <entry>
-                            <key>schema-inference-cache</key>
+                            <key>cache-size</key>
                             <value>
-<identifiesControllerService>org.apache.nifi.serialization.RecordSchemaCacheService</identifiesControllerService>
-<name>schema-inference-cache</name>
-                            </value>
-                        </entry>
-                        <entry>
-                            <key>Date Format</key>
-                            <value>
-<name>Date Format</name>
-                            </value>
-                        </entry>
-                        <entry>
-                            <key>Time Format</key>
-                            <value>
-<name>Time Format</name>
-                            </value>
-                        </entry>
-                        <entry>
-                            <key>Timestamp Format</key>
-                            <value>
-<name>Timestamp Format</name>
+<name>cache-size</name>
                             </value>
                         </entry>
                     </descriptors>
-                    <name>JsonTreeReader</name>
+                    <name>AvroReader</name>
                     <persistsState>false</persistsState>
                     <properties>
                         <entry>
@@ -157,24 +138,15 @@
                             <key>schema-text</key>
                         </entry>
                         <entry>
-                            <key>schema-inference-cache</key>
-                        </entry>
-                        <entry>
-                            <key>Date Format</key>
-                        </entry>
-                        <entry>
-                            <key>Time Format</key>
-                        </entry>
-                        <entry>
-                            <key>Timestamp Format</key>
+                            <key>cache-size</key>
                         </entry>
                     </properties>
                     <state>ENABLED</state>
-                    <type>org.apache.nifi.json.JsonTreeReader</type>
+                    <type>org.apache.nifi.avro.AvroReader</type>
                 </controllerServices>
                 <processors>
-                    <id>2750d973-b4d9-3db9-0000-000000000000</id>
-                    <parentGroupId>e24c8e09-ecd7-37d3-0000-000000000000</parentGroupId>
+                    <id>2d39b874-5d0c-3e44-0000-000000000000</id>
+                    <parentGroupId>685967ad-c367-3cb8-0000-000000000000</parentGroupId>
                     <position>
                         <x>792.0</x>
                         <y>232.0</y>
@@ -336,7 +308,7 @@
                         <properties>
                             <entry>
 <key>bootstrap.servers</key>
-<value>kafka:9092</value>
+<value>broker:29092</value>
                             </entry>
                             <entry>
 <key>security.protocol</key>
@@ -429,16 +401,16 @@
                         <autoTerminate>false</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>RUNNING</state>
+                    <state>STOPPED</state>
                     <style/>
                     <type>org.apache.nifi.processors.kafka.pubsub.ConsumeKafka_2_6</type>
                 </processors>
                 <processors>
-                    <id>976142ae-dafb-3973-0000-000000000000</id>
-                    <parentGroupId>e24c8e09-ecd7-37d3-0000-000000000000</parentGroupId>
+                    <id>cc196a0f-fb4a-3b97-0000-000000000000</id>
+                    <parentGroupId>685967ad-c367-3cb8-0000-000000000000</parentGroupId>
                     <position>
-                        <x>608.0</x>
-                        <y>472.0</y>
+                        <x>592.0</x>
+                        <y>480.0</y>
                     </position>
                     <bundle>
                         <artifact>nifi-standard-nar</artifact>
@@ -505,7 +477,7 @@
                         <properties>
                             <entry>
 <key>Directory</key>
-<value>/padogrid/nifi/data/json</value>
+<value>/padogrid/nifi/data/avro</value>
                             </entry>
                             <entry>
 <key>Conflict Resolution Strategy</key>
@@ -546,16 +518,16 @@
                         <autoTerminate>true</autoTerminate>
                         <name>success</name>
                     </relationships>
-                    <state>RUNNING</state>
+                    <state>STOPPED</state>
                     <style/>
                     <type>org.apache.nifi.processors.standard.PutFile</type>
                 </processors>
                 <processors>
-                    <id>e0fd29b9-6e5b-3019-0000-000000000000</id>
-                    <parentGroupId>e24c8e09-ecd7-37d3-0000-000000000000</parentGroupId>
+                    <id>e1f4ff51-43f7-3366-0000-000000000000</id>
+                    <parentGroupId>685967ad-c367-3cb8-0000-000000000000</parentGroupId>
                     <position>
-                        <x>1040.0</x>
-                        <y>480.0</y>
+                        <x>1072.0</x>
+                        <y>488.0</y>
                     </position>
                     <bundle>
                         <artifact>nifi-parquet-nar</artifact>
@@ -742,7 +714,7 @@
                             </entry>
                             <entry>
 <key>record-reader</key>
-<value>3f3e62e4-2f4f-3b41-0000-000000000000</value>
+<value>35992f90-0abf-3e4f-0000-000000000000</value>
                             </entry>
                             <entry>
 <key>Directory</key>
@@ -829,5 +801,5 @@
             <variables/>
         </processGroups>
     </snippet>
-    <timestamp>02/12/2021 21:25:01 UTC</timestamp>
+    <timestamp>01/28/2022 00:58:46 UTC</timestamp>
 </template>

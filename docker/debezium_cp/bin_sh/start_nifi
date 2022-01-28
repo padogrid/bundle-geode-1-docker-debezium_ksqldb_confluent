@@ -8,7 +8,7 @@ PORT=8090
 
 
 if [ ! -d $APP_DIR/padogrid/nifi/data ]; then
-  mkdir $APP_DIR/padogrid/nifi/data/json
+  mkdir -p $APP_DIR/padogrid/nifi/data/avro
 fi
 docker run --rm -d --name nifi -p $PORT:8080 \
   --network debezium_cp_default \
