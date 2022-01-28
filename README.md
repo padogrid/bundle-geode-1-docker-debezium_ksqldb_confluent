@@ -8,7 +8,7 @@ This bundle integrates Geode with Debezium and Confluent ksqlDB for ingesting in
 install_bundle -checkout bundle-geode-1-docker-debezium_ksqldb_confluent
 ```
 
-:exclamation: If you are running this bundle on WSL, make sure your workspace is on a shared folder. The Docker volume it creates will not be visible otherwise.
+:exclamation: If you are running this bundle on WSL, make sure your workspace is on a shared folder. The Docker volume it creates will not be visible outside of WSL otherwise.
 
 ## Use Case
 
@@ -116,10 +116,10 @@ cd_app perf_test_ksql/bin_sh
 vi setenv.sh
 ```
 
-Enter the version number in `setenv.sh`.
+Enter the version number in `setenv.sh`. For example, 1.13.3, as shown below.
 
 ```bash
-GEODE_VERSION=1.14.2
+GEODE_VERSION=1.13.3
 ```
 
 Build the app by running `build_app` which downloads the MySQL JDBC driver and Geode.
