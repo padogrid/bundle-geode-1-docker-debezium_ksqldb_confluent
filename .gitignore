@@ -22,6 +22,8 @@ lib
 plugins
 .workspace
 .cluster
+.ipynb_checkpoints
+workspace.code-workspace
 
 # PadoGrid workspace directories
 apps
