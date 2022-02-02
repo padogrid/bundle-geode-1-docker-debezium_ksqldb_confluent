@@ -19,13 +19,13 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 ## Required Software
 
 - PadoGrid 0.9.13+ (PRODUCT=none)
-- Docker
 - Docker Compose
 - Maven 3.x
 
 ## Optional Software
 
 - jq
+- Terraform - In addition to Docker Compose, Terraform artifacts are also provided in case it is preferred.
 
 ## Building Demo
 
@@ -159,13 +159,35 @@ cd_docker geode
 docker-compose up -d
 ```
 
-### 2. Start Debezium
+### 2. Start containers
 
-Start Zookeeper, Kafka, Schema Registry, MySQL, Kafka Connect, Control Center, ksqlDB Server, ksqlDB CLI, and Rest Proxy containers:
+Start the following containers.
+
+- Zookeeper
+- Kafka Broker
+- Schema Registry
+- MySQL
+- Kafka Connect
+- Control Center
+- ksqlDB Server 
+- ksqlDB CLI
+- Rest Proxy
+
+:pencil2: *This bundle includes artifacts for Docker Compose and Terraform. You can use either one to launch the containers as shown below.*
+
+#### Option 1. Docker Compose
 
 ```bash
 cd_docker debezium_cp
 docker-compose up -d
+```
+
+#### Option 2. Terraform
+
+```bash
+cd_docker debezium_cp
+terraform init
+terraform apply -auto-approve
 ```
 
 :exclamation: Wait till all the containers are up before executing the `init_all` script.
@@ -613,7 +635,10 @@ padogrid/nifi/data/avro/
 ```bash
 # Stop KSQL and Kafka containers
 cd_docker debezium_cp
+# Option 1. Stop via Docker Compose
 docker-compose down
+# Option 2. Stop via Terraform
+terraform destroy
 
 # Stop NiFi
 cd_docker debezium_cp/bin_sh
@@ -639,3 +664,5 @@ docker container prune
 8. Apache NiFi Documentation, http://nifi.apache.org/docs.html
 9. Microsoft Power BI Desktop Download, https://powerbi.microsoft.com/en-us/desktop/
 10. Oracle MySQL, https://www.mysql.com/
+11. Docker Compose, https://docs.docker.com/compose/
+12. Terraform Docker Provider, https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs
