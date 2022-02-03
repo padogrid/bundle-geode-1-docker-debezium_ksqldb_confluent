@@ -108,6 +108,11 @@ resource "docker_container" "mysql" {
     internal = 3306
     external = 3306
   }
+  # volumes for dumping and exporting tables
+  volumes {
+    host_path = "${path.cwd}/padogrid"
+    container_path = "/padogrid"
+  }
   env = ["MYSQL_ROOT_PASSWORD=debezium",
       "MYSQL_USER=mysqluser",
       "MYSQL_PASSWORD=mysqlpw"]

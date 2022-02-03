@@ -1,4 +1,27 @@
 #!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Display Kafka Connect log
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESCRIPTION
+   Displays Kafka Connect log.
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
+fi
 
 docker-compose exec connect /bin/bash -c "tail -f /kafka/logs/connect-service.log"
 

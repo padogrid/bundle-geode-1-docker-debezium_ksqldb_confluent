@@ -1,4 +1,27 @@
 #!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Watch the specified Kafka topic
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESCRIPTION
+   Watches the specified Kafka topic.
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
+fi
 
 if [ "$1" == "" ]; then
    echo >&2 "ERROR: Topic is not specified. Command aborted."

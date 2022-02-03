@@ -5,14 +5,22 @@ SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
 EXECUTABLE="`basename $0`"
 
 if [ "$HELP" == "true" ]; then
-   echo "Usage:"
-   echo "   ./$EXECUTABLE [-?]"
-   echo ""
-   echo "   Drops all KSQL streams using the KSQL REST API."
-   echo ""
-   echo "Default: ./$EXECUTABLE"
-   echo ""
-   exit
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Drop all ksqlDB streams using the KSQL REST API
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESCRIPTION
+   Drops all ksqlDB streams using the KSQL REST API.
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
 fi
 
 if [ "$(which jq)" == "" ]; then

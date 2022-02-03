@@ -1,3 +1,22 @@
 #!/usr/bin/env bash
 
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - List all Kakfa topics
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESCRIPTION
+   Lists all Kafka topics.
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
+fi
+
 docker run --rm --tty --network debezium_cp_default confluentinc/cp-kafkacat kafkacat -b broker:9092 -L | grep topic

@@ -5,15 +5,23 @@ SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
 EXECUTABLE="`basename $0`"
 
 if [ "$HELP" == "true" ]; then
-   echo "Usage:"
-   echo "   ./$EXECUTABLE [-?]"
-   echo ""
-   echo "   Copies the geode jar files to the 'padogrid' directory which is mounted"
-   echo "   by the Docker Geode connector container."
-   echo ""
-   echo "Default: ./$EXECUTABLE"
-   echo ""
-   exit
+cat <<EOF
+
+NAME
+   ./$EXECUTABLE - Build the Docker cluster environment
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESCRIPTION
+   Copies the geode jar files to the 'padogrid' directory which is mounted
+   by the Docker Geode connector container."
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
 fi
 
 pushd $APP_DIR > /dev/null

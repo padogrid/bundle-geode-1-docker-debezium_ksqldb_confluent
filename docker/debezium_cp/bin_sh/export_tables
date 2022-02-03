@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Export customers and orders tables to CSV files
+
+SYNOPSIS
+   $EXECUTABLE [-?]
+
+DESCRIPTION
+   Exports the customers and orders tables to CSV files in the following directory:
+
+   $APP_DIR/padogrid/mysql
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
+fi
+
+if [ ! -d $APP_DIR/padogrid/mysql ]; then
+  mkdir -p $APP_DIR/padogrid/mysql
+fi
+docker exec -e MYSQL_PWD=debezium mysql /bin/bash -c "mysql -uroot -e \"
+use nw;
+select * from customers into outfile '/var/lib/mysql-files/customers.csv';
+select * from orders into outfile '/var/lib/mysql-files/orders.csv';
+\"
+mv /var/lib/mysql-files/customers.csv /padogrid/mysql/;
+mv /var/lib/mysql-files/orders.csv /padogrid/mysql/
+"
+
+echo "Tables exported in the following directory:"
+echo "   $APP_DIR/padogrid/mysql"

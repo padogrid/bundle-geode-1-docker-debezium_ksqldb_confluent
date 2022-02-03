@@ -1,4 +1,30 @@
 #!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Initialize Docker cluster environment
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESCRIPTION
+   Initializes the Docker cluster environment as follows:
+
+   - Copy cache.xml to the $GEODE_DOCKER_CLUSTER docker cluster
+   - Create the 'nw' database in MySQL
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
+fi
 
 # Copy cache.xml to the geode cluster. It includes co-located data configuration
 # for the /nw/orders region. Power BI files are located in etc/powerbi/ for generating

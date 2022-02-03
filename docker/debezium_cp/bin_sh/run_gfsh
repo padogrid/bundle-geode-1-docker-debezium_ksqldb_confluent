@@ -1,4 +1,27 @@
 #!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Run Geode gfsh
+
+SYNOPSIS
+   ./$EXECUTABLE [-?]
+
+DESCRIPTION
+   Runs Geode gfsh.
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
+fi
 
 docker exec -it geode_locator_1 /bin/bash -c gfsh
 

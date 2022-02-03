@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+EXECUTABLE="`basename $0`"
+
+if [ "$HELP" == "true" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Dump customers and orders tables to sql files
+
+SYNOPSIS
+   $EXECUTABLE [-?]
+
+DESCRIPTION
+   Dumps the customers and orders tables to sql files in the following directory:
+
+   $APP_DIR/padogrid/mysql
+
+DEFAULT
+   ./$EXECUTABLE
+
+EOF
+exit
+fi
+
+if [ ! -d $APP_DIR/padogrid/mysql ]; then
+  mkdir -p $APP_DIR/padogrid/mysql
+fi
+#docker exec -it mysql /bin/bash -c "mysqldump --no-tablespaces -u debezium -pdbz nw customers > /padogrid/mysql/customers.sql; mysqldump --no-tablespaces -u debezium -pdbz nw orders > /padogrid/mysql/orders.sql"
+docker exec -e MYSQL_PWD=debezium mysql /bin/bash -c "mysqldump --no-tablespaces -uroot nw customers > /padogrid/mysql/customers.sql; mysqldump --no-tablespaces -uroot nw orders > /padogrid/mysql/orders.sql"
+
+echo "Tables dumped in the following directory:"
+echo "   $APP_DIR/padogrid/mysql"
