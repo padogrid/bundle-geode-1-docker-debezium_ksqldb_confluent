@@ -20,7 +20,6 @@ DESCRIPTION
 
 DEFAULT
    ./$EXECUTABLE
-
 EOF
 exit
 fi
@@ -28,10 +27,18 @@ fi
 if [ ! -d $APP_DIR/padogrid/mysql ]; then
   mkdir -p $APP_DIR/padogrid/mysql
 fi
+#docker exec -e MYSQL_PWD=debezium mysql /bin/bash -c "mysql -uroot -e \"
+#use nw;
+#select * from customers into outfile '/var/lib/mysql-files/customers.csv' fields enclosed by '\"' terminated by ',' escaped by '\"' lines terminated by '\\n';
+#select * from orders into outfile '/var/lib/mysql-files/orders.csv' fields enclosed by '\"' terminated by ',' escaped by '\"' lines terminated by '\\n';
+#\"
+#mv /var/lib/mysql-files/customers.csv /padogrid/mysql/;
+#mv /var/lib/mysql-files/orders.csv /padogrid/mysql/
+#"
 docker exec -e MYSQL_PWD=debezium mysql /bin/bash -c "mysql -uroot -e \"
 use nw;
-select * from customers into outfile '/var/lib/mysql-files/customers.csv';
-select * from orders into outfile '/var/lib/mysql-files/orders.csv';
+select * from customers into outfile '/var/lib/mysql-files/customers.csv' fields terminated by ',' enclosed by '\\\"' lines terminated by '\\n';
+select * from orders into outfile '/var/lib/mysql-files/orders.csv' fields terminated by ',' enclosed by '\\\"' lines terminated by '\\n';
 \"
 mv /var/lib/mysql-files/customers.csv /padogrid/mysql/;
 mv /var/lib/mysql-files/orders.csv /padogrid/mysql/
