@@ -44,3 +44,4 @@ docker/geode
 docker/debezium_cp/padogrid/nifi
 .terraform*
 terraform.tfstate*
+docker/debezium_cp/padogrid/mysql
