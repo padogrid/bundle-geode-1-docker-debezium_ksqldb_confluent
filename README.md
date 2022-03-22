@@ -549,8 +549,8 @@ quit
 
 ### 11. Browse Geode Pulse and Swagger
 
-http://localhost:7070/pulse/
-http://localhost:7080/geode/swagger-ui.html
+- http://localhost:7070/pulse/
+- http://localhost:7080/geode/swagger-ui.html
 
 ![Geode Pulse](images/geode-pulse.png)
 
