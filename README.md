@@ -592,9 +592,23 @@ cd_docker debezium_cp/bin_sh
 ./start_nifi
 ```
 
-URL: http://localhost:8090/nifi
+URL: http://localhost:8443/nifi
 
-Once started, from the browser, import the following template file.
+Grep the Nifi log file to obtain the generated user name and password. Login to Nifi from the browser using the generated user name and password.
+
+```bash
+docker logs nifi | grep -i generated
+```
+
+Output:
+
+```console
+...
+Generated Username [81e0be91-1b59-458b-8e7a-8c89067864e3]
+Generated Password [0ixDGcPZb562m2E/DWl9tSPQ/bUXPIfC]
+```
+
+Upon login, import the following template file.
 
 ```bash
 cd_docker debezium_cp
@@ -613,7 +627,7 @@ Template upload steps:
 The *Kafka Live Archive* group generates JSON files in the `padogrid/nifi/data/json` directory upon receipt of Debezium events from the Kafka topics, `customers` and `orders`. Each file represents a Debezium event containing a database CDC record. Run the `perf_test` app again to generate Kafka events.
 
 ```bash
-cd_docker debezium_cp/bin_sh
+cd_docker debezium_cp
 tree padogrid/nifi/data/avro/
 ```
 
