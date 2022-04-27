@@ -60,10 +60,21 @@ padogrid/
     └── geode-addon-core-0.9.13-tests.jar
 ```
 
+## Geode 1.13.3
+
+:exclamation: This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you install Geode 1.13.3 first as follows.
+
+```bash
+# Install 1.13.3
+install_padogrid -product geode
+
+# Update your workspace with Geode 1.13.3
+update_padogrid -product geode
+```
 
 ## Creating Geode Docker Containers
 
-Let's create a Geode cluster to run on Docker containers as follows. If you have not installed Geode, then run the `install_padogrid -product geode` command to install the version of your choice and then run the `update_product -product geode` command to set the version.
+Let's create a Geode cluster to run on Docker containers as follows. If you have not installed Geode, then run the `install_padogrid -product geode` command to install the version of your choice and then run the `update_product -product geode` command to set the version. Geode 1.13.3 recommended.
 
 ```bash
 create_docker -product geode -cluster geode -host host.docker.internal
@@ -110,6 +121,7 @@ create_app -product geode -app perf_test -name perf_test_ksql
 ```
 
 This bundle does not require Geode/GemFire locally installed, i.e., `PRODUCT=none`. To run without the local Geode/GemFire installation, specify the Geode version number in the `setenv.sh` file as follows.
+
 ```bash
 
 cd_app perf_test_ksql/bin_sh
@@ -219,6 +231,28 @@ Note that if you run the script more than once then you may see multiple custome
 cd_app perf_test_ksql/bin_sh
 ./test_group -run -db -prop ../etc/group-factory.properties
 ```
+
+#### 3.1. Dump/Export tables
+
+We can ingest the initial data into Geode from Kafka but that might not be practical if the tables are large and updates in Kafka have been accumlating for a long period of time. A better way to ingest the initial data is to export tables to data files that can be quickly imported into Geode. This bundle provides the following scripts to dump or export tables to files.
+
+```bash
+cd_docker debezium_cp
+
+# Dump to SQL files
+./dump_tables
+
+# Export to CSV files
+./export_tables
+```
+
+#### 3.2. Live Archiving Service
+
+While exporting and importing the initial data, the tables continue to take on data updates. We need a way to determine the event location of the Kafka stream that represents the last update that was made just prior to exporting data. This is typically done by adding the last update timestamp column in each table. By comparing this timestamp with Kafka events, it is possible to determine the Kafka event sequence number representing the last table update just before the table is exported.
+
+This task is handled by the **Live Archiving Service (LAS)** which is part of the PadoGrid reference architecture. LAS stores the exported data files with retention policies applied, and builds and maintains rich sets of metadata that are used for indexing file contents for search engines, creating consistent analytics reports, synchronizing imported data with streamed data, and etc.
+
+Implementing LAS takes a lot of time and effort. We hope to introduce LAS in another bundle...
 
 ### 4. Navigate Confluent Control Center
 
