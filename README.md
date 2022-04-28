@@ -29,6 +29,20 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ## Building Demo
 
+### Geode 1.13.3
+
+:exclamation: This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you install Geode 1.13.3 first as follows.
+
+```bash
+# Install 1.13.3
+install_padogrid -product geode
+
+# Update your workspace with Geode 1.13.3
+update_padogrid -product geode
+```
+
+### Build Bundle
+
 We must first build the bundle by running the `build_app` command as shown below. This command copies the Geode, `padogrid-common`, and `geode-addon-core` jar files to the Docker container mounted volume in the `padogrid` directory so that the Geode Debezium Kafka connector can include them in its class path. It also downloads the ksql JDBC driver jar and its dependencies in the `padogrid/lib/jdbc` directory.
 
 ```bash
@@ -53,6 +67,8 @@ padogrid/
 │   ├── ...
 │   ├── geode-addon-core-0.9.13.jar
 │   ├── ...
+│   ├── geode-core-1.13.3.jar
+│   ├── ...
 │   ├── padogrid-common-0.9.13.jar
 │   ├── ...
 ├── log
@@ -60,19 +76,7 @@ padogrid/
     └── geode-addon-core-0.9.13-tests.jar
 ```
 
-## Geode 1.13.3
-
-:exclamation: This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you install Geode 1.13.3 first as follows.
-
-```bash
-# Install 1.13.3
-install_padogrid -product geode
-
-# Update your workspace with Geode 1.13.3
-update_padogrid -product geode
-```
-
-## Creating Geode Docker Containers
+### Create Geode Docker Containers
 
 Let's create a Geode cluster to run on Docker containers as follows. If you have not installed Geode, then run the `install_padogrid -product geode` command to install the version of your choice and then run the `update_product -product geode` command to set the version. Geode 1.13.3 recommended.
 
@@ -112,7 +116,7 @@ Replace `host.docker.internal` in `client-cache.xml` with your host IP address.
 </client-cache>
 ```
 
-## Creating `perf_test_ksql` app
+### Create `perf_test_ksql` app
 
 Create and build `perf_test_ksql` for ingesting mock data into MySQL:
 
@@ -202,7 +206,18 @@ terraform init
 terraform apply -auto-approve
 ```
 
-:exclamation: Wait till all the containers are up before executing the `init_all` script.
+:exclamation: Wait till all the containers are up before executing the `init_all` script. This can be verified by monitoring the Kafka Connect log. Look for the log message "Kafka Connect started".
+
+```bash
+docker logs -f connect
+```
+
+Output:
+
+```console
+...
+[2022-04-28 17:24:54,017] INFO Kafka Connect started (org.apache.kafka.connect.runtime.Connect)
+```
 
 Execute `init_all` which performs the following:
 
@@ -237,7 +252,7 @@ cd_app perf_test_ksql/bin_sh
 We can ingest the initial data into Geode from Kafka but that might not be practical if the tables are large and updates in Kafka have been accumlating for a long period of time. A better way to ingest the initial data is to export tables to data files that can be quickly imported into Geode. This bundle provides the following scripts to dump or export tables to files.
 
 ```bash
-cd_docker debezium_cp
+cd_docker debezium_cp/bin_sh
 
 # Dump to SQL files
 ./dump_tables
