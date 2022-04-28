@@ -248,7 +248,7 @@ cd_docker debezium_cp
 
 #### 3.2. Live Archiving Service
 
-While exporting and importing the initial data, the tables continue to take on data updates. We need a way to determine the event location of the Kafka stream that represents the last update that was made just prior to exporting data. This is typically done by adding the last update timestamp column in each table. By comparing this timestamp with Kafka events, it is possible to determine the Kafka event sequence number representing the last table update just before the table is exported.
+While exporting and importing the initial data, the tables may continue to take on data updates. We need a way to determine the event location of the Kafka stream that represents the last update that was made just prior to exporting data. This is typically done by adding the last update timestamp column in each table. By comparing this timestamp with Kafka events, it is possible to determine the Kafka event sequence number representing the last table update just before the table is exported.
 
 This task is handled by the **Live Archiving Service (LAS)** which is part of the PadoGrid reference architecture. LAS stores the exported data files with retention policies applied, and builds and maintains rich sets of metadata that are used for indexing file contents for search engines, creating consistent analytics reports, synchronizing imported data with streamed data, and etc.
 
