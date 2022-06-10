@@ -13,6 +13,10 @@ buildNumber.properties
 # vi
 *.swp
 
+# Eclipse
+.project
+.settings
+
 # PadoGrid workspace
 /.addonenv.sh
 /initenv.sh
