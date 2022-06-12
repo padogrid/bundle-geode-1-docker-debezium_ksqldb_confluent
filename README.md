@@ -4,6 +4,8 @@ This bundle integrates Geode with Debezium and Confluent ksqlDB for ingesting in
 
 ## Installing Bundle
 
+![PadoGrid](https://github.com/padogrid/padogrid/raw/develop/images/padogrid-3d-16x16.png) [*Driven by PadoGrid*](https://github.com/padogrid)
+
 ```bash
 install_bundle -checkout bundle-geode-1-docker-debezium_ksqldb_confluent
 ```
