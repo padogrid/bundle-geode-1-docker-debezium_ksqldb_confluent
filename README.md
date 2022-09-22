@@ -34,7 +34,7 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ### Geode 1.13.3
 
-:exclamation: This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you install Geode 1.13.3 first as follows.
+:exclamation: This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.3 as follows.
 
 ```bash
 # Install 1.13.3
@@ -68,15 +68,15 @@ padogrid/
 │   └── client-cache.xml
 ├── lib
 │   ├── ...
-│   ├── geode-addon-core-0.9.13.jar
+│   ├── geode-addon-core-0.9.21.jar
 │   ├── ...
 │   ├── geode-core-1.13.3.jar
 │   ├── ...
-│   ├── padogrid-common-0.9.13.jar
+│   ├── padogrid-common-0.9.21.jar
 │   ├── ...
 ├── log
 └── plugins
-    └── geode-addon-core-0.9.13-tests.jar
+    └── geode-addon-core-0.9.21-tests.jar
 ```
 
 ### Create Geode Docker Containers
@@ -138,7 +138,7 @@ vi setenv.sh
 Enter the version number in `setenv.sh`. For example, 1.13.3, as shown below.
 
 ```bash
-GEODE_VERSION=1.13.3
+ANOTHER_GEODE_VERSION=1.13.3
 ```
 
 Build the app by running `build_app` which downloads the MySQL JDBC driver and Geode.
