@@ -366,7 +366,7 @@ Repartition streams.
 -- orders_stream
 DROP STREAM IF EXISTS orders_stream;
 CREATE STREAM orders_stream WITH (KAFKA_TOPIC='ORDERS_REPART',VALUE_FORMAT='avro',PARTITIONS=1) \
-AS SELECT * FROM orders_from_after PARTITION BY orderid;
+AS SELECT * FROM orders_after PARTITION BY orderid;
 
 -- customers_stream
 DROP STREAM IF EXISTS customers_stream;
@@ -385,15 +385,29 @@ SELECT * FROM orders_from_debezium EMIT CHANGES LIMIT 1;
 Output:
 
 ```console
-+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
-|ROWTIME |ROWKEY  |ORDERID |CUSTOMER|EMPLOYEE|FREIGHT |ORDERDAT|REQUIRED|SHIPADDR|SHIPCITY|SHIPTCOU|SHIPNAME|SHIPPOST|SHIPREGI|SHIPVIA |SHIPPEDD|
-|        |        |        |ID      |ID      |        |E       |DATE    |ESS     |        |NTRY    |        |CAL     |ON      |        |ATE     |
-+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
-|15971609|{"orderI|k0000000|000000-0|575585+2|40.25865|15969522|15975697|365 Osca|New Laur|null    |Terry, K|null    |FL      |1       |15971208|
-|01582   |d":"k000|066     |012     |624     |43354865|01000   |06000   |r Cove, |ence    |        |ohler an|        |        |        |45000   |
-|        |0000066"|        |        |        |4       |        |        |Lawrence|        |        |d Bernie|        |        |        |        |
-|        |}       |        |        |        |        |        |        |ville, R|        |        |r       |        |        |        |        |
-|        |        |        |        |        |        |        |        |I 64139 |        |        |        |        |        |        |        |
++---------------------+---------------------+---------------------+---------------------+---------------------+---------------------+
+|BEFORE               |AFTER                |SOURCE               |OP                   |TS_MS                |TRANSACTION          |
++---------------------+---------------------+---------------------+---------------------+---------------------+---------------------+
+|null                 |{ORDERID=k0000000126,|{VERSION=1.8.0.Final,|c                    |1664490885606        |null                 |
+|                     | CREATED_ON=166449088| CONNECTOR=mysql, NAM|                     |                     |                     |
+|                     |5512, UPDATED_ON=1664|E=dbserver1, TS_MS=16|                     |                     |                     |
+|                     |490885512, CUSTOMERID|64490885000, SNAPSHOT|                     |                     |                     |
+|                     |=000000-0024, EMPLOYE|=false, DB=nw, SEQUEN|                     |                     |                     |
+|                     |EID=924594+8180, FREI|CE=null, TABLE=orders|                     |                     |                     |
+|                     |GHT=95.61, ORDERDATE=|, SERVER_ID=223344, G|                     |                     |                     |
+|                     |1664199015000, REQUIR|TID=null, FILE=mysql-|                     |                     |                     |
+|                     |EDDATE=1664309650000,|bin.000003, POS=5996,|                     |                     |                     |
+|                     | SHIPADDRESS=Suite 18| ROW=0, THREAD=null, |                     |                     |                     |
+|                     |5 159 Alan Canyon, Al|QUERY=null}          |                     |                     |                     |
+|                     |fredmouth, DE 02774, |                     |                     |                     |                     |
+|                     |SHIPCITY=Port Lisandr|                     |                     |                     |                     |
+|                     |a, SHIPCOUNTRY=Maurit|                     |                     |                     |                     |
+|                     |ania, SHIPNAME=Streic|                     |                     |                     |                     |
+|                     |h-Effertz, SHIPPOSTAL|                     |                     |                     |                     |
+|                     |CODE=75158-0647, SHIP|                     |                     |                     |                     |
+|                     |REGION=AZ, SHIPVIA=3,|                     |                     |                     |                     |
+|                     | SHIPPEDDATE=16645081|                     |                     |                     |                     |
+|                     |27000}               |                     |                     |                     |                     |
 Limit Reached
 Query terminated
 ```
@@ -408,15 +422,16 @@ SELECT * FROM orders_stream EMIT CHANGES LIMIT 1;
 Output:
 
 ```console
-+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
-|ROWTIME |ROWKEY  |ORDERID |CUSTOMER|EMPLOYEE|FREIGHT |ORDERDAT|REQUIRED|SHIPADDR|SHIPCITY|SHIPTCOU|SHIPNAME|SHIPPOST|SHIPREGI|SHIPVIA |SHIPPEDD|
-|        |        |        |ID      |ID      |        |E       |DATE    |ESS     |        |NTRY    |        |CAL     |ON      |        |ATE     |
-+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
-|15971609|k0000000|k0000000|000000-0|575585+2|40.25865|15969522|15975697|365 Osca|New Laur|null    |Terry, K|null    |FL      |1       |15971208|
-|01582   |066     |066     |012     |624     |43354865|01000   |06000   |r Cove, |ence    |        |ohler an|        |        |        |45000   |
-|        |        |        |        |        |4       |        |        |Lawrence|        |        |d Bernie|        |        |        |        |
-|        |        |        |        |        |        |        |        |ville, R|        |        |r       |        |        |        |        |
-|        |        |        |        |        |        |        |        |I 64139 |        |        |        |        |        |        |        |
++--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
+|ORDERID |CUSTOMER|EMPLOYEE|FREIGHT |ORDERDAT|REQUIRED|SHIPADDR|SHIPCITY|SHIPCOUN|SHIPNAME|SHIPPOST|SHIPREGI|SHIPVIA |SHIPPEDD|
+|        |ID      |ID      |        |E       |DATE    |ESS     |        |TRY     |        |ALCODE  |ON      |        |ATE     |
++--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
+|k0000000|000000-0|924594+8|95.61   |16641990|16643096|Suite 18|Port Lis|Mauritan|Streich-|75158-06|AZ      |3       |16645081|
+|126     |024     |180     |        |15000   |50000   |5 159 Al|andra   |ia      |Effertz |47      |        |        |27000   |
+|        |        |        |        |        |        |an Canyo|        |        |        |        |        |        |        |
+|        |        |        |        |        |        |n, Alfre|        |        |        |        |        |        |        |
+|        |        |        |        |        |        |dmouth, |        |        |        |        |        |        |        |
+|        |        |        |        |        |        |DE 02774|        |        |        |        |        |        |        |
 Limit Reached
 Query terminated
 ```
