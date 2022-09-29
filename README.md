@@ -8,7 +8,7 @@ This bundle integrates Geode with Debezium and Confluent ksqlDB for ingesting in
 ## Installing Bundle
 
 ```bash
-install_bundle -checkout bundle-geode-1-docker-debezium_ksqldb_confluent
+install_bundle -download -workspace bundle-geode-1-docker-debezium_ksqldb_confluent
 ```
 
 :exclamation: If you are running this bundle on WSL, make sure your workspace is on a shared folder. The Docker volume it creates will not be visible outside of WSL otherwise.
@@ -37,6 +37,9 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 :exclamation: This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.3 as follows.
 
 ```bash
+# Check product versions
+show_products
+
 # Install 1.13.3
 install_padogrid -product geode
 
@@ -266,7 +269,7 @@ cd_docker debezium_cp/bin_sh
 
 #### 3.2. Live Archiving Service
 
-While exporting and importing the initial data, the tables may continue to take on data updates. We need a way to determine the event location of the Kafka stream that represents the last update that was made just prior to exporting data. This is typically done by adding the last update timestamp column in each table. By comparing this timestamp with Kafka events, it is possible to determine the Kafka event sequence number representing the last table update just before the table is exported.
+While exporting and importing the initial data, the tables may continue to take on data updates. We need a way to determine the event location in the Kafka stream that represents the last update that was made just prior to exporting data. This is typically done by adding the last update timestamp column in each table. By comparing this timestamp with Kafka events, it is possible to determine the Kafka event sequence number representing the last table update just before the table is exported.
 
 This task is handled by the **Live Archiving Service (LAS)** which is part of the PadoGrid reference architecture. LAS stores the exported data files with retention policies applied, and builds and maintains rich sets of metadata that are used for indexing file contents for search engines, creating consistent analytics reports, synchronizing imported data with streamed data, and etc.
 
