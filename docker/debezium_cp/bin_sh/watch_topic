@@ -19,6 +19,10 @@ DESCRIPTION
 DEFAULT
    ./$EXECUTABLE
 
+EXAMPLES
+   ./$EXECUTABLE dbserver1.nw.customers
+   ./$EXECUTABLE dbserver1.nw.orders
+
 EOF
 exit
 fi
