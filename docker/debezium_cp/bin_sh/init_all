@@ -16,7 +16,7 @@ SYNOPSIS
 DESCRIPTION
    Initializes the Docker cluster environment as follows:
 
-   - Copy cache.xml to the $GEODE_DOCKER_CLUSTER docker cluster
+   - Copy cache.xml to the '$GEODE_DOCKER_CLUSTER' docker cluster
    - Create the 'nw' database in MySQL
 
 DEFAULT
@@ -29,7 +29,6 @@ fi
 # Copy cache.xml to the geode cluster. It includes co-located data configuration
 # for the /nw/orders region. Power BI files are located in etc/powerbi/ for generating
 # reports using the co-located data.
-GEODE_DOCKER_CLUSTER="geode"
 echo ""
 if [ -d $PADOGRID_WORKSPACE/docker/$GEODE_DOCKER_CLUSTER ]; then
    cp ../padogrid/etc/cache.xml $PADOGRID_WORKSPACE/docker/$GEODE_DOCKER_CLUSTER/padogrid/etc/cache.xml

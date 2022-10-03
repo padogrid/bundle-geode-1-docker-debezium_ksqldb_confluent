@@ -43,3 +43,6 @@ JAVA_OPTS="$JAVA_OPTS -DgemfirePropertyFile=$GEMFIRE_PROPERTY_FILE \
 JAVA_OPTS="$JAVA_OPTS -Dgeode-addon.hibernate.config=$APP_ETC_DIR/hibernate.cfg-mysql.xml"
 
 # CLASSPATH="$CLASSPATH"
+
+# Gedoe Docker cluster name
+GEODE_DOCKER_CLUSTER="geode"
