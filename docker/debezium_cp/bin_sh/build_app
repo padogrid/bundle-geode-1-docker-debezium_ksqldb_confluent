@@ -11,11 +11,15 @@ NAME
    ./$EXECUTABLE - Build the Docker cluster environment
 
 SYNOPSIS
-   ./$EXECUTABLE [-?]
+   ./$EXECUTABLE [-clean] [-?]
 
 DESCRIPTION
    Copies the geode jar files to the 'padogrid' directory which is mounted
    by the Docker Geode connector container."
+
+
+   -clean
+             Cleans the '../padgrid/lib/' and '../padogrid/plugins/' directories before starting the build process.
 
 DEFAULT
    ./$EXECUTABLE
@@ -43,6 +47,13 @@ if [ ! -d padogrid/log ]; then
 fi
 if [ ! -d padogrid/etc ]; then
    mkdir -p padogrid/etc
+fi
+
+if [ "$CLEAN" == "true" ]; then
+   rm padogrid/lib/* padogrid/plugins/*
+   echo ""
+   echo -e "${CHighlight}[CLEAN] ${CNone}padogrid/lib/, padogrid/plugins/"
+   echo ""
 fi
 
 cp $GEODE_HOME/lib/*.jar padogrid/lib/
