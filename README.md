@@ -668,15 +668,15 @@ The included `*.pbix` files are identical to the ones found in the [Power BI bun
 
 [Loading .pbix Files](https://github.com/padogrid/bundle-geode-1-app-perf_test_powerbi-cluster-powerbi#loading-pbix-files)
 
-#### Freight Costs by Date
+#### 13.1. Freight Costs by Date
 
 ![Power BI Pie Chart](images/pbi-pie.png)
 
-#### Customers by State
+#### 13.2. Customers by State
 
 ![Power BI Map](images/pbi-map.png)
 
-### 13. Run NiFi
+### 14. Run NiFi
 
 This bundle also includes NiFi, which can be started as follows.
 
