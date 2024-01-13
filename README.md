@@ -91,39 +91,54 @@ padogrid/
 Let's create a Geode cluster to run on Docker containers as follows. If you have not installed Geode, then run the `install_padogrid -product geode` command to install the version of your choice and then run the `update_product -product geode` command to set the version. Geode 1.13.3 recommended.
 
 ```bash
-create_docker -product geode -cluster geode -host host.docker.internal
+create_docker -product geode -cluster geode
 cd_docker geode
 ```
 
-If you are running Docker Desktop, then the host name, `host.docker.internal`, is accessible from the containers as well as the host machine. You can run the `ping` command to check the host name.
+Append the `debezium_cp_default` network to `docker-compose.yaml` so that the Kafka Connect container can connect to the Geode cluster.
 
-```bash
-ping host.docker.internal
+```console
+cat << EOF >> docker-compose.yaml
+networks:
+  default:
+    name: debezium_cp_default
+    external: true
+EOF
 ```
 
-If `host.docker.internal` is not defined then you will need to use the host IP address that can be accessed from both the Docker containers and the host machine. Run `create_docker -?` or `man create_docker` to see the usage.
-
-```bash
-create_docker -?
-```
-
-If you are using a host IP other than `host.docker.internal` then you must also make the change in the Debezium Geode connector configuration file as follows.
+The Kafka Connect container is configured with `padogrid/etc/client-cache.xml` to connect to the Geode cluster. You can see from the file the Geode locator host is set to `geode-locator-1`.
 
 ```bash
 cd_docker debezium_cp
-vi padogrid/etc/client-cache.xml
+cat padogrid/etc/client-cache.xml
 ```
 
-Replace `host.docker.internal` in `client-cache.xml` with your host IP address.
+Output:
 
 ```xml
 <client-cache ...>
    ...
     <pool name="serverPool">
-         <locator host="host.docker.internal" port="10334" />
+         <locator host="geode-locator-1" port="10334" />
     </pool>
    ...
 </client-cache>
+```
+
+The Geode container names can be viewed by executing `docker compose ps` as follows.
+
+```bash
+cd_docker geode
+docker compose ps
+```
+
+Output:
+
+```console
+NAME                IMAGE                      COMMAND                  SERVICE             CREATED             STATUS              PORTS
+geode-locator-1     apachegeode/geode:1.13.3   "bash -c 'export LOG…"   locator             10 minutes ago      Up 10 minutes       1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:9051->9051/tcp, 0.0.0.0:10334->10334/tcp, 8080/tcp, 40404/tcp, 0.0.0.0:12101->12101/tcp
+geode-server1-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server1             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 0.0.0.0:7080->7080/tcp, 0.0.0.0:8091->8091/tcp, 8080/tcp, 0.0.0.0:9101->9101/tcp, 10334/tcp, 0.0.0.0:40404->40404/tcp, 0.0.0.0:10991->12001/tcp
+geode-server2-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server2             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 8080/tcp, 10334/tcp, 40404/tcp, 0.0.0.0:40405->40405/tcp, 0.0.0.0:7081->7080/tcp, 0.0.0.0:8092->8091/tcp, 0.0.0.0:9102->9101/tcp, 0.0.0.0:10992->12001/tcp
 ```
 
 ### Create `perf_test_ksql` app
@@ -155,10 +170,12 @@ cd_app perf_test_ksql/bin_sh
 ./build_app
 ```
 
-The log4j jar file downloaded by `build_app` may have a conflict with the log4j jar included in the PadoGrid distribution. Make sure to remove the downloaded log4j files from the workspace's `lib` directory as follows.
+The log4j jar file downloaded by `build_app` may have a conflict with the log4j jar included in the PadoGrid distribution. Make sure to remove the downloaded log4j files from the workspace and app `lib` directories as follows.
 
 ```bash
 cd_workspace
+rm lib/log4j*
+cd_app perf_test_ksql
 rm lib/log4j*
 ```
 
@@ -178,14 +195,7 @@ Set user name and password as follows:
 
 ## Startup Sequence
 
-### 1. Start Geode
-
-```bash
-cd_docker geode
-docker-compose up -d
-```
-
-### 2. Start containers
+### 1. Start `debezium_cp` containers
 
 Start the following containers.
 
@@ -239,7 +249,16 @@ cd_docker debezium_cp/bin_sh
 ./init_all
 ```
 
-There are three (3) Kafka connectors that we need to register. The MySQL connector is provided by Debezium and the data connectors are part of the PadoGrid distribution. 
+### 2. Start Geode containers
+
+```bash
+cd_docker geode
+docker-compose up -d
+```
+
+### 3. Register Kafka connectors
+
+There are three (3) Kafka connectors. The MySQL connector is provided by Debezium and the data connectors are part of the PadoGrid distribution. 
 
 ```bash
 cd_docker debezium_cp/bin_sh
@@ -248,7 +267,7 @@ cd_docker debezium_cp/bin_sh
 ./register_connector_data_orders
 ```
 
-### 3. Ingest mock data into the `nw.customers` and `nw.orders` tables in MySQL
+### 4. Ingest mock data into the `nw.customers` and `nw.orders` tables in MySQL
 
 Note that if you run the script more than once then you may see multiple customers sharing the same customer ID when you execute KSQL queries on streams since the streams keep all the CDC records. The database (MySQL), on the other hand, will always have a single customer per customer ID.
 
@@ -257,7 +276,7 @@ cd_app perf_test_ksql/bin_sh
 ./test_group -run -db -prop ../etc/group-factory.properties
 ```
 
-#### 3.1. Dump/Export tables
+#### 4.1. Dump/Export tables
 
 We can ingest the initial data into Geode from Kafka but that might not be practical if the tables are large and updates in Kafka have been accumlating for a long period of time. A better way to ingest the initial data is to export tables to data files that can be quickly imported into Geode. This bundle provides the following scripts to dump or export tables to files.
 
@@ -271,7 +290,7 @@ cd_docker debezium_cp/bin_sh
 ./export_tables
 ```
 
-#### 3.2. Live Archiving Service
+#### 4.2. Live Archiving Service
 
 While exporting and importing the initial data, the tables may continue to take on data updates. We need a way to determine the event location in the Kafka stream that represents the last update that was made just prior to exporting data. This is typically done by adding the last update timestamp column in each table. By comparing this timestamp with Kafka events, it is possible to determine the Kafka event sequence number representing the last table update just before the table is exported.
 
@@ -279,7 +298,7 @@ This task is handled by the **Live Archiving Service (LAS)** which is part of th
 
 Implementing LAS takes a lot of time and effort. We hope to introduce LAS in another bundle...
 
-### 4. Navigate Confluent Control Center
+### 5. Navigate Confluent Control Center
 
 Open your browser and enter the following URL:
 
@@ -289,7 +308,7 @@ To execute ksqlDB statements, navigate to **/Home/ksqlDB clusters/skqlDB/ksqldb1
 
 ![Confluent Control Center Diagram](images/confluent-control-center.png)
 
-### 5. Run ksqlDB CLI
+### 6. Run ksqlDB CLI
 
 ```bash
 cd_docker debezium_cp/bin_sh
@@ -302,7 +321,7 @@ The ksqlDB processing by default starts with `latest` offsets. Set the ksqlDB pr
 SET 'auto.offset.reset' = 'earliest';
 ```
 
-#### 5.1 Create Streams
+#### 6.1 Create Streams
 
 Create the following streams:
 
@@ -440,7 +459,7 @@ Limit Reached
 Query terminated
 ```
 
-#### 5.2 Create Tables
+#### 6.2 Create Tables
 
 Create the `customers` table.
 
@@ -490,7 +509,7 @@ Quit ksqlDB:
 Ctrl-D
 ```
 
-### 6. Watch topics
+### 7. Watch topics
 
 ```bash
 cd_docker debezium_cp/bin_sh
@@ -498,7 +517,7 @@ cd_docker debezium_cp/bin_sh
 ./watch_topic dbserver1.nw.orders
 ```
 
-### 7. Run MySQL CLI
+### 8. Run MySQL CLI
 
 ```bash
 cd_docker debezium_cp/bin_sh
@@ -540,7 +559,7 @@ Quit MySQL CLI:
 quit
 ```
 
-### 8. Check Kafka Connect
+### 9. Check Kafka Connect
 
 ```bash
 # Check status
@@ -560,7 +579,7 @@ The last command should display the connectors that we registered previously.
 ]
 ```
 
-### 9. Drop ksqlDB Statements
+### 10. Drop ksqlDB Statements
 
 The following scripts are provided to drop KSQL/ksqlDB queries using the KSQL/ksqlDB REST API.
 
@@ -577,7 +596,7 @@ cd_app debezium_cp/bin_sh
 ./ksql_drop_all_tables
 ```
 
-### 10. Run Geode `gfsh`
+### 11. Run Geode `gfsh`
 
 The `run_gfsh` script logs into the locator container and starts `gfsh`. You can connect to the default locator, localhost[10334], and execture OQL queries to verify MySQL data ingested via Debezium is also captured in the Geode cluster.
 
@@ -621,14 +640,14 @@ Quit `gfsh`:
 quit
 ```
 
-### 11. Browse Geode Pulse and Swagger
+### 12. Browse Geode Pulse and Swagger
 
 - http://localhost:7070/pulse/
 - http://localhost:7080/geode/swagger-ui.html
 
 ![Geode Pulse](images/geode-pulse.png)
 
-### 12. Run Power BI
+### 13. Run Power BI
 
 This bundle includes the following Power BI files for generating reports by executing OQL queries using the Geode/GemFire REST API.
 
