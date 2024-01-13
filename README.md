@@ -15,7 +15,7 @@ This bundle integrates Geode with Debezium and Confluent ksqlDB for ingesting in
 install_bundle -download -workspace bundle-geode-1-docker-debezium_ksqldb_confluent
 ```
 
-:exclamation: If you are running this bundle on WSL, make sure your workspace is on a shared folder. The Docker volume it creates will not be visible outside of WSL otherwise.
+❗ If you are running this bundle on WSL, make sure your workspace is on a shared folder. The Docker volume it creates will not be visible outside of WSL otherwise.
 
 ## Use Case
 
@@ -38,7 +38,7 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ### Geode 1.13.3
 
-:exclamation: This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.3 as follows.
+❗ This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.3 as follows.
 
 ```bash
 # Check product versions
@@ -86,27 +86,9 @@ padogrid/
     └── geode-addon-core-0.9.21-tests.jar
 ```
 
-### Create Geode Docker Containers
+#### Kafka Connect Container
 
-Let's create a Geode cluster to run on Docker containers as follows. If you have not installed Geode, then run the `install_padogrid -product geode` command to install the version of your choice and then run the `update_product -product geode` command to set the version. Geode 1.13.3 recommended.
-
-```bash
-create_docker -product geode -cluster geode
-cd_docker geode
-```
-
-Append the `debezium_cp_default` network to `docker-compose.yaml` so that the Kafka Connect container can connect to the Geode cluster.
-
-```console
-cat << EOF >> docker-compose.yaml
-networks:
-  default:
-    name: debezium_cp_default
-    external: true
-EOF
-```
-
-The Kafka Connect container is configured with `padogrid/etc/client-cache.xml` to connect to the Geode cluster. You can see from the file the Geode locator host is set to `geode-locator-1`.
+The Kafka Connect container is configured with `padogrid/etc/client-cache.xml` to connect to the Geode cluster. You can see from the file the Geode locator host is set to `geode-locator-1` which is the Geode locator container name.
 
 ```bash
 cd_docker debezium_cp
@@ -125,20 +107,24 @@ Output:
 </client-cache>
 ```
 
-The Geode container names can be viewed by executing `docker compose ps` as follows.
+### Create Geode Docker Containers
+
+Let's create a Geode cluster to run on Docker containers as follows. If you have not installed Geode, then run the `install_padogrid -product geode` command to install the version of your choice and then run the `update_product -product geode` command to set the version. Geode 1.13.3 recommended.
 
 ```bash
+create_docker -product geode -cluster geode
 cd_docker geode
-docker compose ps
 ```
 
-Output:
+Append the `debezium_cp_default` network to `docker-compose.yaml` so that the Kafka Connect container can connect to the Geode cluster.
 
 ```console
-NAME                IMAGE                      COMMAND                  SERVICE             CREATED             STATUS              PORTS
-geode-locator-1     apachegeode/geode:1.13.3   "bash -c 'export LOG…"   locator             10 minutes ago      Up 10 minutes       1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:9051->9051/tcp, 0.0.0.0:10334->10334/tcp, 8080/tcp, 40404/tcp, 0.0.0.0:12101->12101/tcp
-geode-server1-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server1             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 0.0.0.0:7080->7080/tcp, 0.0.0.0:8091->8091/tcp, 8080/tcp, 0.0.0.0:9101->9101/tcp, 10334/tcp, 0.0.0.0:40404->40404/tcp, 0.0.0.0:10991->12001/tcp
-geode-server2-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server2             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 8080/tcp, 10334/tcp, 40404/tcp, 0.0.0.0:40405->40405/tcp, 0.0.0.0:7081->7080/tcp, 0.0.0.0:8092->8091/tcp, 0.0.0.0:9102->9101/tcp, 0.0.0.0:10992->12001/tcp
+cat << EOF >> docker-compose.yaml
+networks:
+  default:
+    name: debezium_cp_default
+    external: true
+EOF
 ```
 
 ### Create `perf_test_ksql` app
@@ -209,7 +195,7 @@ Start the following containers.
 - ksqlDB CLI
 - Rest Proxy
 
-:pencil2: *This bundle includes artifacts for Docker Compose and Terraform. You can use either one to launch the containers as shown below.*
+✏️ *This bundle includes artifacts for Docker Compose and Terraform. You can use either one to launch the containers as shown below.*
 
 #### 1.1. Option 1. Docker Compose
 
@@ -217,6 +203,24 @@ Start the following containers.
 cd_docker debezium_cp
 docker-compose up -d
 ```
+
+The Geode container names can be viewed by executing `docker compose ps` as follows.
+
+```bash
+cd_docker geode
+docker compose ps
+```
+
+Output:
+
+```console
+NAME                IMAGE                      COMMAND                  SERVICE             CREATED             STATUS              PORTS
+geode-locator-1     apachegeode/geode:1.13.3   "bash -c 'export LOG…"   locator             10 minutes ago      Up 10 minutes       1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:9051->9051/tcp, 0.0.0.0:10334->10334/tcp, 8080/tcp, 40404/tcp, 0.0.0.0:12101->12101/tcp
+geode-server1-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server1             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 0.0.0.0:7080->7080/tcp, 0.0.0.0:8091->8091/tcp, 8080/tcp, 0.0.0.0:9101->9101/tcp, 10334/tcp, 0.0.0.0:40404->40404/tcp, 0.0.0.0:10991->12001/tcp
+geode-server2-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server2             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 8080/tcp, 10334/tcp, 40404/tcp, 0.0.0.0:40405->40405/tcp, 0.0.0.0:7081->7080/tcp, 0.0.0.0:8092->8091/tcp, 0.0.0.0:9102->9101/tcp, 0.0.0.0:10992->12001/tcp
+```
+
+As you can see from the above output, the Geode locator container name is `geode-locator-1`. The Kafka Connect container connects to `geode-locator-1` as described in the [Kafka Connect Container](#kafka-connect-container) section.
 
 #### 1.2. Option 2. Terraform
 
@@ -226,7 +230,7 @@ terraform init
 terraform apply -auto-approve
 ```
 
-:exclamation: Wait till all the containers are up before executing the `init_all` script. This can be verified by monitoring the Kafka Connect log. Look for the log message "Kafka Connect started".
+❗ Wait till all the containers are up before executing the `init_all` script. This can be verified by monitoring the Kafka Connect log. Look for the log message "Kafka Connect started".
 
 ```bash
 docker logs -f connect
