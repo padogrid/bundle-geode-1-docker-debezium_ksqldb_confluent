@@ -211,14 +211,14 @@ Start the following containers.
 
 :pencil2: *This bundle includes artifacts for Docker Compose and Terraform. You can use either one to launch the containers as shown below.*
 
-#### Option 1. Docker Compose
+#### 1.1. Option 1. Docker Compose
 
 ```bash
 cd_docker debezium_cp
 docker-compose up -d
 ```
 
-#### Option 2. Terraform
+#### 1.2. Option 2. Terraform
 
 ```bash
 cd_docker debezium_cp
