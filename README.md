@@ -204,24 +204,6 @@ cd_docker debezium_cp
 docker-compose up -d
 ```
 
-The Geode container names can be viewed by executing `docker compose ps` as follows.
-
-```bash
-cd_docker geode
-docker compose ps
-```
-
-Output:
-
-```console
-NAME                IMAGE                      COMMAND                  SERVICE             CREATED             STATUS              PORTS
-geode-locator-1     apachegeode/geode:1.13.3   "bash -c 'export LOG…"   locator             10 minutes ago      Up 10 minutes       1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:9051->9051/tcp, 0.0.0.0:10334->10334/tcp, 8080/tcp, 40404/tcp, 0.0.0.0:12101->12101/tcp
-geode-server1-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server1             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 0.0.0.0:7080->7080/tcp, 0.0.0.0:8091->8091/tcp, 8080/tcp, 0.0.0.0:9101->9101/tcp, 10334/tcp, 0.0.0.0:40404->40404/tcp, 0.0.0.0:10991->12001/tcp
-geode-server2-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server2             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 8080/tcp, 10334/tcp, 40404/tcp, 0.0.0.0:40405->40405/tcp, 0.0.0.0:7081->7080/tcp, 0.0.0.0:8092->8091/tcp, 0.0.0.0:9102->9101/tcp, 0.0.0.0:10992->12001/tcp
-```
-
-As you can see from the above output, the Geode locator container name is `geode-locator-1`. The Kafka Connect container connects to `geode-locator-1` as described in the [Kafka Connect Container](#kafka-connect-container) section.
-
 #### 1.2. Option 2. Terraform
 
 ```bash
@@ -259,6 +241,24 @@ cd_docker debezium_cp/bin_sh
 cd_docker geode
 docker-compose up -d
 ```
+
+The Geode container names can be viewed by executing `docker compose ps` as follows.
+
+```bash
+cd_docker geode
+docker compose ps
+```
+
+Output:
+
+```console
+NAME                IMAGE                      COMMAND                  SERVICE             CREATED             STATUS              PORTS
+geode-locator-1     apachegeode/geode:1.13.3   "bash -c 'export LOG…"   locator             10 minutes ago      Up 10 minutes       1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:9051->9051/tcp, 0.0.0.0:10334->10334/tcp, 8080/tcp, 40404/tcp, 0.0.0.0:12101->12101/tcp
+geode-server1-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server1             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 0.0.0.0:7080->7080/tcp, 0.0.0.0:8091->8091/tcp, 8080/tcp, 0.0.0.0:9101->9101/tcp, 10334/tcp, 0.0.0.0:40404->40404/tcp, 0.0.0.0:10991->12001/tcp
+geode-server2-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server2             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 8080/tcp, 10334/tcp, 40404/tcp, 0.0.0.0:40405->40405/tcp, 0.0.0.0:7081->7080/tcp, 0.0.0.0:8092->8091/tcp, 0.0.0.0:9102->9101/tcp, 0.0.0.0:10992->12001/tcp
+```
+
+As you can see from the above output, the Geode locator container name is `geode-locator-1`. The Kafka Connect container connects to `geode-locator-1` as described in the [Kafka Connect Container](#kafka-connect-container) section.
 
 ### 3. Register Kafka connectors
 
