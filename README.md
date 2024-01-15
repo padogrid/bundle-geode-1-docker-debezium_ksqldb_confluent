@@ -36,9 +36,9 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ## Building Demo
 
-### Geode 1.13.3
+### Geode 1.13.x and 1.15.x
 
-❗ This bundle has been tested with Geode 1.13.3. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.3 as follows.
+❗ This bundle has been tested with Geode 1.13.3 and Geode 1.15.1. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.x or 1.15.x. The following examples installs Geode 1.13.3.
 
 ```bash
 # Check product versions
