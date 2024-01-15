@@ -75,15 +75,15 @@ padogrid/
 │   └── client-cache.xml
 ├── lib
 │   ├── ...
-│   ├── geode-addon-core-0.9.21.jar
+│   ├── geode-addon-core-0.9.32.jar
 │   ├── ...
 │   ├── geode-core-1.13.3.jar
 │   ├── ...
-│   ├── padogrid-common-0.9.21.jar
+│   ├── padogrid-common-0.9.32.jar
 │   ├── ...
 ├── log
 └── plugins
-    └── geode-addon-core-0.9.21-tests.jar
+    └── geode-addon-core-0.9.32-tests.jar
 ```
 
 #### Kafka Connect Container
@@ -156,7 +156,7 @@ cd_app perf_test_ksql/bin_sh
 ./build_app
 ```
 
-The log4j jar file downloaded by `build_app` may have a conflict with the log4j jar included in the PadoGrid distribution. Make sure to remove the downloaded log4j files from the workspace and app `lib` directories as follows.
+If you are using an older version of PadoGrid, then the log4j jar file downloaded by `build_app` may have a conflict with the log4j jar included in the PadoGrid distribution. If so, remove the downloaded log4j files from the workspace and app `lib` directories as follows.
 
 ```bash
 cd_workspace
