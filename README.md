@@ -25,7 +25,6 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ## Required Software
 
-- PadoGrid 0.9.13+ (PRODUCT=none)
 - Docker Compose
 - Maven 3.x
 
@@ -42,7 +41,7 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ```bash
 # Check product versions
-show_products
+show_padogrid
 
 # Install 1.13.3
 install_padogrid -product geode
