@@ -37,16 +37,16 @@ This use case ingests data changes made in the MySQL database into Kafka and Geo
 
 ### Geode 1.13.x and 1.15.x
 
-❗ This bundle has been tested with Geode 1.13.3 and Geode 1.15.1. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.x or 1.15.x. The following examples installs Geode 1.13.3.
+❗ This bundle has been tested with Geode 1.13.3 and Geode 1.15.1. The Power BI examples included in this bundle  may not work with Geode 1.14.x due to unknown product issues. It is recommended that you first install Geode 1.13.x or 1.15.x.
 
 ```bash
 # Check product versions
 show_padogrid
 
-# Install 1.13.3
+# Install 1.13.x or 1.15.x
 install_padogrid -product geode
 
-# Update your workspace with Geode 1.13.3
+# Update your workspace with Geode 1.13.x or 1.15.x
 update_padogrid -product geode
 ```
 
@@ -74,15 +74,15 @@ padogrid/
 │   └── client-cache.xml
 ├── lib
 │   ├── ...
-│   ├── geode-addon-core-0.9.32.jar
+│   ├── geode-addon-core-1.0.0.jar
 │   ├── ...
-│   ├── geode-core-1.13.3.jar
+│   ├── geode-core-1.15.1.jar
 │   ├── ...
-│   ├── padogrid-common-0.9.32.jar
+│   ├── padogrid-common-1.0.0.jar
 │   ├── ...
 ├── log
 └── plugins
-    └── geode-addon-core-0.9.32-tests.jar
+    └── geode-addon-core-1.0.0-tests.jar
 ```
 
 #### Kafka Connect Container
@@ -106,24 +106,20 @@ Output:
 </client-cache>
 ```
 
-### Create Geode Docker Containers
+## Create `my_network`
 
-Let's create a Geode cluster to run on Docker containers as follows. If you have not installed Geode, then run the `install_padogrid -product geode` command to install the version of your choice and then run the `update_product -product geode` command to set the version. Geode 1.13.3 recommended.
+Let's create the `my_network` network to which all containers will join.
 
 ```bash
-create_docker -product geode -cluster geode
-cd_docker geode
+docker network create my_network
 ```
 
-Append the `debezium_cp_default` network to `docker-compose.yaml` so that the Kafka Connect container can connect to the Geode cluster.
+### Create Geode Docker Containers
 
-```console
-cat << EOF >> docker-compose.yaml
-networks:
-  default:
-    name: debezium_cp_default
-    external: true
-EOF
+Let's create a Geode cluster to run on Docker containers with the `my_network` network we created in the previous section.
+
+```bash
+create_docker -product geode -cluster geode -network my_network
 ```
 
 ### Create `perf_test_ksql` app
@@ -142,10 +138,10 @@ cd_app perf_test_ksql/bin_sh
 vi setenv.sh
 ```
 
-Enter the version number in `setenv.sh`. For example, 1.13.3, as shown below.
+Enter the version number in `setenv.sh`. For example, 1.15.1, as shown below.
 
 ```bash
-ANOTHER_GEODE_VERSION=1.13.3
+ANOTHER_GEODE_VERSION=1.15.1
 ```
 
 Build the app by running `build_app` which downloads the MySQL JDBC driver and Geode.
@@ -155,7 +151,7 @@ cd_app perf_test_ksql/bin_sh
 ./build_app
 ```
 
-If you are using an older version of PadoGrid, then the log4j jar file downloaded by `build_app` may have a conflict with the log4j jar included in the PadoGrid distribution. If so, remove the downloaded log4j files from the workspace and app `lib` directories as follows.
+If you are using a PadoGrid version older than v1.0.0, then the log4j jar file downloaded by `build_app` may have a conflict with the log4j jar included in the PadoGrid distribution. If so, remove the downloaded log4j files from the workspace and app `lib` directories as follows.
 
 ```bash
 cd_workspace
@@ -252,9 +248,9 @@ Output:
 
 ```console
 NAME                IMAGE                      COMMAND                  SERVICE             CREATED             STATUS              PORTS
-geode-locator-1     apachegeode/geode:1.13.3   "bash -c 'export LOG…"   locator             10 minutes ago      Up 10 minutes       1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:9051->9051/tcp, 0.0.0.0:10334->10334/tcp, 8080/tcp, 40404/tcp, 0.0.0.0:12101->12101/tcp
-geode-server1-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server1             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 0.0.0.0:7080->7080/tcp, 0.0.0.0:8091->8091/tcp, 8080/tcp, 0.0.0.0:9101->9101/tcp, 10334/tcp, 0.0.0.0:40404->40404/tcp, 0.0.0.0:10991->12001/tcp
-geode-server2-1     apachegeode/geode:1.13.3   "bash -c 'if [ ! -d …"   server2             10 minutes ago      Up 10 minutes       1099/tcp, 7070/tcp, 8080/tcp, 10334/tcp, 40404/tcp, 0.0.0.0:40405->40405/tcp, 0.0.0.0:7081->7080/tcp, 0.0.0.0:8092->8091/tcp, 0.0.0.0:9102->9101/tcp, 0.0.0.0:10992->12001/tcp
+geode-locator-1     apachegeode/geode:1.15.1   "bash -c 'export LOG…"   locator             5 seconds ago       Up 4 seconds        1099/tcp, 0.0.0.0:7070->7070/tcp, 0.0.0.0:9051->9051/tcp, 0.0.0.0:10334->10334/tcp, 8080/tcp, 40404/tcp, 0.0.0.0:12101->12101/tcp
+geode-server1-1     apachegeode/geode:1.15.1   "bash -c 'if [ ! -d …"   server1             5 seconds ago       Up 4 seconds        1099/tcp, 7070/tcp, 0.0.0.0:7080->7080/tcp, 0.0.0.0:8091->8091/tcp, 8080/tcp, 0.0.0.0:9101->9101/tcp, 10334/tcp, 0.0.0.0:40404->40404/tcp, 0.0.0.0:10991->12001/tcp
+geode-server2-1     apachegeode/geode:1.15.1   "bash -c 'if [ ! -d …"   server2             5 seconds ago       Up 4 seconds        1099/tcp, 7070/tcp, 8080/tcp, 10334/tcp, 40404/tcp, 0.0.0.0:40405->40405/tcp, 0.0.0.0:7081->7080/tcp, 0.0.0.0:8092->8091/tcp, 0.0.0.0:9102->9101/tcp, 0.0.0.0:10992->12001/tcp
 ```
 
 As you can see from the above output, the Geode locator container name is `geode-locator-1`. The Kafka Connect container connects to `geode-locator-1` as described in the [Kafka Connect Container](#kafka-connect-container) section.
@@ -759,6 +755,9 @@ cd_docker debezium_cp/bin_sh
 # Stop Geode containers
 cd_docker geode
 docker-compose down
+
+# Remove network
+docker network rm my_network
 
 # Prune all stopped containers
 docker container prune
